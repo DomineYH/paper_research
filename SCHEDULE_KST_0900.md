@@ -1,12 +1,10 @@
 # Daily Schedule Spec (KST 09:00)
 
 - Time: Every day 09:00 KST
-- Topics (fixed):
-  1. prompt
-  2. reverse prompt
-  3. data science
-  4. ai agent
-  5. context engineering
+- Topics (dynamic):
+  - 기본 앵커: prompt, reverse prompt, data science, ai agent, context engineering
+  - 매일 실행 시 최신 동향 기반 확장 주제 2~5개를 추가 제안 후 반영
+  - 예시 확장 주제: AI safety/evals, agent memory, tool-use reliability, multimodal agents, RAG evaluation, synthetic data quality, LLM observability
 
 ## Job outputs
 - `arxiv_paper/YYYY-MM-DD.md`
@@ -17,8 +15,9 @@
   - 선정 조건: KCI급 이상 논문 및 박사학위 논문 우선
   - 각 논문별: 500자 내외 요약 + 핵심기여 + 링크 + 핵심키워드 해시태그
 - `research_reports/YYYY-MM-DD.md`
-  - 박사과정 수준의 심층 보고서 (다각도: 이론/방법/평가/윤리/산업적 함의)
-  - 엄밀 인용 포맷 + APA 참고문헌 포함
+  - 당일 수집한 논문(arXiv + KR)을 근거로 박사학위급 연구 주제를 1개 이상 도출
+  - 해당 주제로 심층 보고서 작성(다각도: 이론/방법/평가/윤리/산업적 함의)
+  - 본문에서 당일 논문을 근거로 직접 인용하고, 엄밀 인용 포맷 + APA 참고문헌 포함
 
 ## Quality requirements (mandatory)
 1. 중복 제거: 동일 논문(abs/pdf/html 버전) 1건만 유지
