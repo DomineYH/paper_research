@@ -11,9 +11,9 @@ fi
 DATE=$1
 cd "$(dirname "$0")"
 
-# Check if there are changes to commit
-if ! git diff --quiet; then
-    # Add all changes
+# Check if there are any changes (including untracked files)
+if ! git diff --quiet || [ -n "$(git status --porcelain)" ]; then
+    # Add all changes including untracked files
     git add .
     
     # Commit with date
