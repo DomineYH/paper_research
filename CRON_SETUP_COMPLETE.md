@@ -30,6 +30,7 @@
 1. **arXiv Collection**: ✅ Working
    - Fetches recent papers from `cs.CL`, `cs.AI`, `cs.LG`, `stat.ML`, `cs.CR`.
    - Handles per-category API failures without aborting all collection.
+   - Writes foreign/arXiv paper summaries in Korean.
    - Deduplicates arXiv versions.
 
 2. **Korean Papers Collection**: ✅ Working with caveat

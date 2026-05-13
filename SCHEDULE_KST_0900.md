@@ -9,11 +9,11 @@
 ## Job outputs
 - `arxiv_paper/YYYY-MM-DD.md`
   - arXiv recent papers, target ~10 papers/day
-  - 각 논문별: 500자 내외 요약 + 핵심기여 + 링크 + 핵심키워드 해시태그
+  - 각 논문별: 한국어 500자 내외 요약 + 핵심기여 + 링크 + 핵심키워드 해시태그
 - `kr_paper/YYYY-MM-DD.md`
   - 수집 소스: RISS, DBpia, Google Scholar, KCI
   - 선정 조건: KCI급 이상 논문 및 박사학위 논문 우선
-  - 각 논문별: 500자 내외 요약 + 핵심기여 + 링크 + 핵심키워드 해시태그
+  - 각 논문별: 한국어 500자 내외 요약 + 핵심기여 + 링크 + 핵심키워드 해시태그
 - `research_reports/YYYY-MM-DD.md`
   - 당일 수집한 논문(arXiv + KR)을 근거로 박사학위급 연구 주제를 1개 이상 도출
   - 해당 주제로 심층 보고서 작성(다각도: 이론/방법/평가/윤리/산업적 함의)

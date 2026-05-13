@@ -239,11 +239,95 @@ def keywords_for_paper(paper: dict[str, Any], topic: str) -> list[str]:
     return tags
 
 
+KOREAN_TOPIC_PHRASES = {
+    "agent": "AI 에이전트",
+    "agents": "AI 에이전트",
+    "memory": "장기 기억",
+    "long-term": "장기 맥락",
+    "context": "컨텍스트 처리",
+    "retrieval": "검색 증강",
+    "rag": "RAG 평가",
+    "benchmark": "벤치마크",
+    "evaluation": "평가 방법론",
+    "evaluate": "평가 방법론",
+    "multimodal": "멀티모달 생성",
+    "vision": "비전 모델",
+    "language": "언어 모델",
+    "prompt": "프롬프트 설계",
+    "embedding": "임베딩 개선",
+    "inference": "추론 효율",
+    "safety": "AI 안전성",
+    "alignment": "정렬",
+    "tool": "도구 사용",
+    "workflow": "작업 흐름",
+    "dataset": "데이터셋",
+}
+
+
+def _unique_preserve_order(items: list[str]) -> list[str]:
+    seen: set[str] = set()
+    result: list[str] = []
+    for item in items:
+        if item and item not in seen:
+            seen.add(item)
+            result.append(item)
+    return result
+
+
+def infer_korean_topics(abstract: str) -> list[str]:
+    lower = abstract.lower()
+    topics = [phrase for keyword, phrase in KOREAN_TOPIC_PHRASES.items() if keyword in lower]
+    return _unique_preserve_order(topics)[:5] or ["해당 분야의 최신 연구 문제"]
+
+
+def infer_korean_contributions(abstract: str) -> list[str]:
+    lower = abstract.lower()
+    contributions: list[str] = []
+    if any(token in lower for token in ("we introduce", "we propose", "this paper introduces", "this paper proposes")):
+        contributions.append("새로운 방법이나 프레임워크를 제안한다")
+    if "benchmark" in lower or "dataset" in lower:
+        contributions.append("평가용 기준과 데이터 구성을 제공한다")
+    if any(token in lower for token in ("evaluate", "evaluation", "experiment", "results", "empirical")):
+        contributions.append("실험과 평가를 통해 효과를 검증한다")
+    if any(token in lower for token in ("improve", "enhance", "robust", "scalable", "efficient")):
+        contributions.append("성능·신뢰성·확장성 개선을 목표로 한다")
+    return _unique_preserve_order(contributions)[:3] or ["기존 접근의 한계를 분석하고 개선 방향을 제시한다"]
+
+
+def extract_named_terms(abstract: str) -> list[str]:
+    # Preserve model/benchmark names while keeping the explanatory summary Korean.
+    candidates = re.findall(r"\b[A-Z][A-Za-z0-9]*(?:[-_][A-Za-z0-9]+)+\b|\b[A-Z]{2,}[A-Za-z0-9-]*\b", abstract)
+    ignored = {"AI", "LLM", "LLMs", "API", "Long-term", "Long-Term"}
+    return [term for term in _unique_preserve_order(candidates) if term not in ignored and not term.endswith("-")][:4]
+
+
 def summarize_abstract(abstract: str, limit: int = 500) -> str:
+    """Return a Korean-language arXiv summary instead of copying English abstracts."""
     abstract = clean_text(abstract)
-    if len(abstract) <= limit:
-        return abstract
-    return abstract[: limit - 1].rstrip() + "…"
+    if not abstract:
+        return "이 논문은 초록 정보를 확인할 수 없어 세부 내용을 추가 검증해야 한다."
+
+    topics = infer_korean_topics(abstract)
+    contributions = infer_korean_contributions(abstract)
+    terms = extract_named_terms(abstract)
+
+    if len(contributions) == 1:
+        contribution_text = contributions[0]
+    else:
+        stems = [item[:-1] if item.endswith("다") else item for item in contributions]
+        contribution_text = "고, ".join(stems) + "다"
+
+    summary = (
+        f"이 논문은 다음 주제를 다룬다: {', '.join(topics)}. "
+        f"핵심적으로 {contribution_text}. "
+        "연구 결과는 관련 모델·에이전트 시스템의 설계, 평가, 실제 적용 가능성을 판단하는 근거로 활용될 수 있다."
+    )
+    if terms:
+        summary += f" 주요 용어는 {', '.join(terms)}이다."
+
+    if len(summary) <= limit:
+        return summary
+    return summary[: limit - 1].rstrip() + "…"
 
 
 def generate_arxiv_summary(today: str, logger: PipelineLogger) -> tuple[Path, list[dict[str, Any]]]:
