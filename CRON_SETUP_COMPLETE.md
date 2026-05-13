@@ -1,53 +1,63 @@
 # Research Pipeline Cron Job Setup Complete
 
 ## Summary
-✅ **Daily Research Pipeline (KST 09:00)** cron job has been successfully created and configured.
+✅ **Daily Research Pipeline (KST 09:00)** cron job has been restored and verified.
 
 ## Configuration Details
-- **Cron ID**: 466eff70-6087-42fc-aa81-66ab8313edf3
-- **Schedule**: 0 0 * * * (00:00 UTC = 09:00 KST daily)
-- **Timezone**: Asia/Seoul
-- **Target**: Isolated session
+- **Cron ID**: `8b07426b4fe9`
+- **Schedule**: `0 9 * * *` (09:00 KST daily, as reported by Hermes cron)
+- **Target**: origin Discord channel
 - **Delivery**: Discord announce
 - **Status**: Enabled ✅
+- **Repository**: `/home/ubuntu/research`
+- **Entry point**: `python3 daily_research_pipeline.py`
+
+## Root Cause of 2026-05-13 Repair
+1. Hermes cron list was empty, so the old daily job was no longer scheduled.
+2. `daily_research_pipeline.py` still attempted to commit from the obsolete OpenClaw path:
+   `/home/ubuntu/.openclaw/workspace/paper_research`
+3. arXiv parsing used brittle regexes and could generate `0` papers even when the API returned valid Atom entries.
+
+## Repair Performed
+1. Recreated Hermes cron job for daily 09:00 KST execution.
+2. Rewrote the pipeline to resolve paths relative to `/home/ubuntu/research`.
+3. Replaced brittle arXiv regex parsing with Atom XML parsing.
+4. Added deduplication by arXiv ID and run logs under `paper_research/run_logs/`.
+5. Restored GitHub add/commit/push from the correct repository root.
 
 ## Pipeline Components Verified
 1. **arXiv Collection**: ✅ Working
-   - Fetches ~10 papers daily
-   - Dynamic topic selection (prompt/reverse prompt/data science/ai agent/context engineering)
-   - 500 character summaries with keywords and links
+   - Fetches recent papers from `cs.CL`, `cs.AI`, `cs.LG`, `stat.ML`, `cs.CR`.
+   - Handles per-category API failures without aborting all collection.
+   - Deduplicates arXiv versions.
 
-2. **Korean Papers Collection**: ✅ Working  
-   - Sources: RISS, DBpia, Google Scholar, KCI
-   - KCI+ and PhD dissertations prioritized
-   - Properly formatted summaries
+2. **Korean Papers Collection**: ✅ Working with caveat
+   - Current implementation records curated candidate placeholders because RISS/DBpia/KCI do not expose simple unauthenticated API access in this environment.
+   - Items are explicitly marked as requiring follow-up verification.
 
 3. **Research Report Generation**: ✅ Working
-   - PhD-level research topics based on collected papers
-   - Multi-dimensional analysis (theory/method/evaluation/ethics/industry)
-   - APA citation format
+   - Creates a PhD-level topic and multidimensional report based on collected arXiv papers and Korean candidates.
 
 4. **Git Integration**: ✅ Working
-   - Automatic add/commit/push pipeline
-   - Handles tracked and untracked files
-   - Commits with date-stamped messages
+   - Pulls/rebases from origin.
+   - Adds generated outputs and pipeline changes.
+   - Commits with date-stamped message.
+   - Pushes to `origin/main`.
 
-## Testing Results
-- Pipeline execution: ✅ Successful (2026-04-06 test run)
-- Git commit functionality: ✅ Verified and working
-- File generation: ✅ All three output files generated correctly
-- Discord output format: ✅ Compliant with 3-line requirement
+## Latest Manual Verification
+- **Date**: 2026-05-13
+- **Commit**: `5543158 Update research papers - 2026-05-13`
+- **Generated**:
+  - `paper_research/arxiv_paper/2026-05-13.md`
+  - `paper_research/kr_paper/2026-05-13.md`
+  - `paper_research/research_reports/2026-05-13.md`
+  - `paper_research/run_logs/2026-05-13.log`
+- **GitHub push**: ✅ Success
 
 ## Next Runs
-- **Next Scheduled Run**: 2026-04-07 09:00 KST
-- **Follow-up**: Monitor first few runs for optimization
+- **Next Scheduled Run**: 2026-05-14 09:00 KST
+- **Cron job**: `daily-research-pipeline-kst-0900`
 
 ## Notes
-- Removed duplicate cron job to prevent double execution
-- Fixed git commit script to properly handle untracked files
-- Pipeline uses existing daily_research_pipeline.py script
-- All output follows specified format and requirements
-
----
-*Setup completed on: 2026-04-06*  
-*Tech-Priess of the Adeptus Mechanicus has completed the神圣的任务.*
+- If arXiv returns HTTP 429 for some categories, the pipeline continues with available categories and logs the warning.
+- The script exits non-zero if no arXiv papers are collected or GitHub sync fails, so future cron failures should be visible.
