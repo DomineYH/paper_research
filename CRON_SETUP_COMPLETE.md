@@ -22,8 +22,9 @@
 1. Recreated Hermes cron job for daily 09:00 KST execution.
 2. Rewrote the pipeline to resolve paths relative to `/home/ubuntu/research`.
 3. Replaced brittle arXiv regex parsing with Atom XML parsing.
-4. Added deduplication by arXiv ID and run logs under `paper_research/run_logs/`.
-5. Restored GitHub add/commit/push from the correct repository root.
+4. Restored visible top-level GitHub output folders: `arxiv_paper/`, `kr_paper/`, `research_reports/`.
+5. Added deduplication by arXiv ID and run logs under `paper_research/run_logs/`.
+6. Restored GitHub add/commit/push from the correct repository root.
 
 ## Pipeline Components Verified
 1. **arXiv Collection**: ✅ Working
@@ -48,9 +49,9 @@
 - **Date**: 2026-05-13
 - **Commit**: `5543158 Update research papers - 2026-05-13`
 - **Generated**:
-  - `paper_research/arxiv_paper/2026-05-13.md`
-  - `paper_research/kr_paper/2026-05-13.md`
-  - `paper_research/research_reports/2026-05-13.md`
+  - `arxiv_paper/2026-05-13.md`
+  - `kr_paper/2026-05-13.md`
+  - `research_reports/2026-05-13.md`
   - `paper_research/run_logs/2026-05-13.log`
 - **GitHub push**: ✅ Success
 

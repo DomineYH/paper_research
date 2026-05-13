@@ -21,7 +21,7 @@
   - LLM observability
 
 ### 2) arXiv Output Rule
-- 파일: `paper_research/arxiv_paper/{YYYY-MM-DD}.md`
+- 파일: `arxiv_paper/{YYYY-MM-DD}.md`
 - 목표: 당일 주제군 기준 약 10편
 - 각 논문별 필수 항목:
   - 500자 내외 요약
@@ -32,7 +32,7 @@
 - abs/pdf/html 중복은 1건만 유지
 
 ### 3) KR Paper Output Rule
-- 파일: `paper_research/kr_paper/{YYYY-MM-DD}.md`
+- 파일: `kr_paper/{YYYY-MM-DD}.md`
 - 수집 소스:
   - RISS
   - DBpia
@@ -49,7 +49,7 @@
   - DOI(확인 가능 시)
 
 ### 4) Research Report Rule (핵심)
-- 파일: `paper_research/research_reports/{YYYY-MM-DD}.md`
+- 파일: `research_reports/{YYYY-MM-DD}.md`
 - 반드시 당일 수집한 논문(arXiv + KR)을 근거로 작성한다.
 - 박사학위급 연구 주제를 1개 이상 도출한다.
 - 보고서는 다각도 분석을 포함한다:

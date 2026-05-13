@@ -3,9 +3,9 @@
 Daily Research Pipeline for paper collection and analysis.
 
 Outputs:
-- paper_research/arxiv_paper/YYYY-MM-DD.md
-- paper_research/kr_paper/YYYY-MM-DD.md
-- paper_research/research_reports/YYYY-MM-DD.md
+- arxiv_paper/YYYY-MM-DD.md
+- kr_paper/YYYY-MM-DD.md
+- research_reports/YYYY-MM-DD.md
 - paper_research/run_logs/YYYY-MM-DD.log
 
 The script is intentionally self-contained so Hermes cron can run it from any
@@ -30,11 +30,11 @@ import requests
 
 
 REPO_ROOT = Path(__file__).resolve().parent
-OUTPUT_ROOT = REPO_ROOT / "paper_research"
-ARXIV_DIR = OUTPUT_ROOT / "arxiv_paper"
-KR_DIR = OUTPUT_ROOT / "kr_paper"
-REPORT_DIR = OUTPUT_ROOT / "research_reports"
-RUN_LOG_DIR = OUTPUT_ROOT / "run_logs"
+LEGACY_OUTPUT_ROOT = REPO_ROOT / "paper_research"
+ARXIV_DIR = REPO_ROOT / "arxiv_paper"
+KR_DIR = REPO_ROOT / "kr_paper"
+REPORT_DIR = REPO_ROOT / "research_reports"
+RUN_LOG_DIR = LEGACY_OUTPUT_ROOT / "run_logs"
 
 ANCHOR_TOPICS = [
     "prompt engineering",
@@ -463,9 +463,9 @@ def commit_to_github(today: str) -> tuple[str, bool]:
 
         add_paths = [
             "daily_research_pipeline.py",
-            "paper_research/arxiv_paper",
-            "paper_research/kr_paper",
-            "paper_research/research_reports",
+            "arxiv_paper",
+            "kr_paper",
+            "research_reports",
             "paper_research/run_logs",
         ]
         run_git(["add", *add_paths], check=True)
