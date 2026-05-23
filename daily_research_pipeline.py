@@ -729,6 +729,7 @@ def commit_to_github(today: str) -> tuple[str, bool]:
             return f"GitHub push: 실패 - pull/rebase 실패: {pull.stderr.strip()}", False
 
         add_paths = [
+            ".gitignore",
             "daily_research_pipeline.py",
             "tests",
             "arxiv_paper",
