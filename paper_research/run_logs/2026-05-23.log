@@ -1,15 +1,19 @@
-[2026-05-23T00:00:54Z] 🔬 Daily Research Pipeline Starting...
-[2026-05-23T00:00:54Z] 📅 Date: 2026-05-23
-[2026-05-23T00:00:54Z] 📁 Repository: /home/ubuntu/research
-[2026-05-23T00:00:54Z] 📚 Collecting arXiv papers...
-[2026-05-23T00:01:06Z] ⚠️ arXiv fetch failed for cs.CL: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.CL&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending
-[2026-05-23T00:01:20Z] ⚠️ arXiv fetch failed for cs.AI: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.AI&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending
-[2026-05-23T00:01:36Z] ⚠️ arXiv fetch failed for cs.LG: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.LG&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending
-[2026-05-23T00:01:38Z] ⚠️ arXiv fetch failed for stat.ML: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Astat.ML&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending
-[2026-05-23T00:01:39Z] ⚠️ arXiv fetch failed for cs.CR: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.CR&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending
-[2026-05-23T00:01:39Z] ✅ Generated: arxiv_paper/2026-05-23.md (0 papers)
-[2026-05-23T00:01:39Z] 🇰🇷 Collecting Korean papers...
-[2026-05-23T00:01:39Z] ✅ Generated: kr_paper/2026-05-23.md (3 candidates)
-[2026-05-23T00:01:39Z] 📊 Generating research report...
-[2026-05-23T00:01:39Z] ✅ Generated: research_reports/2026-05-23.md
-[2026-05-23T00:01:39Z] 🚀 Committing to GitHub...
+[2026-05-23T01:19:30Z] 🔬 Daily Research Pipeline Starting...
+[2026-05-23T01:19:30Z] 📅 Date: 2026-05-23
+[2026-05-23T01:19:30Z] 📁 Repository: /home/ubuntu/research
+[2026-05-23T01:19:30Z] 📚 Collecting arXiv papers...
+[2026-05-23T01:19:31Z] ⚠️ arXiv fetch limited for cs.CL (HTTP 429); retrying in 5s
+[2026-05-23T01:20:07Z]   - cs.CL: fetched 8 papers
+[2026-05-23T01:20:11Z] ⚠️ arXiv fetch limited for cs.AI (HTTP 429); retrying in 5s
+[2026-05-23T01:20:16Z] ⚠️ arXiv fetch failed for cs.AI: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.AI&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-05-23T01:20:21Z] ⚠️ arXiv fetch limited for cs.LG (HTTP 429); retrying in 5s
+[2026-05-23T01:20:57Z]   - cs.LG: fetched 8 papers
+[2026-05-23T01:22:01Z] ⚠️ arXiv request error for stat.ML: HTTPSConnectionPool(host='export.arxiv.org', port=443): Read timed out. (read timeout=60); retrying in 5s
+[2026-05-23T01:22:37Z] ⚠️ arXiv fetch failed for stat.ML: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Astat.ML&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-05-23T01:22:41Z]   - cs.CR: fetched 8 papers
+[2026-05-23T01:22:41Z] ✅ Generated: arxiv_paper/2026-05-23.md (10 papers)
+[2026-05-23T01:22:41Z] 🇰🇷 Collecting Korean papers...
+[2026-05-23T01:22:41Z] ✅ Generated: kr_paper/2026-05-23.md (3 candidates)
+[2026-05-23T01:22:41Z] 📊 Generating research report...
+[2026-05-23T01:22:41Z] ✅ Generated: research_reports/2026-05-23.md
+[2026-05-23T01:22:41Z] 🚀 Committing to GitHub...

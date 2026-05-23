@@ -56,7 +56,9 @@ ARXIV_CATEGORIES = ["cs.CL", "cs.AI", "cs.LG", "stat.ML", "cs.CR"]
 ARXIV_MAX_PER_CATEGORY = 8
 ARXIV_TARGET_TOTAL = 10
 ARXIV_API_BASE = "https://export.arxiv.org/api/query"
-USER_AGENT = "HermesResearchPipeline/1.1 (paper-research; +https://github.com/DomineYH/paper_research)"
+ARXIV_REQUEST_DELAY_SECONDS = 4.0
+ARXIV_RETRY_DELAYS_SECONDS = (5.0,)
+USER_AGENT = "HermesResearchPipeline/1.2 (paper-research; +https://github.com/DomineYH/paper_research)"
 
 
 class PipelineLogger:
@@ -96,6 +98,26 @@ def arxiv_id_from_url(url: str) -> str:
     return url.rstrip("/").split("/abs/")[-1]
 
 
+def _retry_delay_seconds(response: requests.Response | None, retry_index: int) -> float:
+    retry_after = response.headers.get("Retry-After") if response is not None else None
+    if retry_after:
+        try:
+            return max(float(retry_after), ARXIV_REQUEST_DELAY_SECONDS)
+        except ValueError:
+            pass
+    return ARXIV_RETRY_DELAYS_SECONDS[min(retry_index, len(ARXIV_RETRY_DELAYS_SECONDS) - 1)]
+
+
+def _format_request_error(exc: Exception) -> str:
+    response = getattr(exc, "response", None)
+    detail = str(exc)
+    if response is not None and getattr(response, "text", None):
+        body = clean_text(response.text)[:120]
+        if body:
+            detail = f"{detail}; body={body}"
+    return detail
+
+
 def fetch_arxiv_category(category: str, logger: PipelineLogger) -> list[dict[str, Any]]:
     """Fetch recent arXiv papers from one category using the Atom API."""
     params = {
@@ -105,20 +127,48 @@ def fetch_arxiv_category(category: str, logger: PipelineLogger) -> list[dict[str
         "sortBy": "submittedDate",
         "sortOrder": "descending",
     }
-    try:
-        response = requests.get(
-            ARXIV_API_BASE,
-            params=params,
-            timeout=60,
-            headers={"User-Agent": USER_AGENT},
-        )
-        response.raise_for_status()
-    except Exception as exc:  # network/API failures should not abort all categories
-        logger.log(f"⚠️ arXiv fetch failed for {category}: {exc}")
+    response: requests.Response | None = None
+    max_attempts = 1 + len(ARXIV_RETRY_DELAYS_SECONDS)
+    for attempt in range(max_attempts):
+        try:
+            response = requests.get(
+                ARXIV_API_BASE,
+                params=params,
+                timeout=60,
+                headers={"User-Agent": USER_AGENT},
+            )
+            response.raise_for_status()
+            break
+        except requests.HTTPError as exc:
+            response = exc.response
+            status_code = response.status_code if response is not None else None
+            retriable = status_code in {429, 500, 502, 503, 504}
+            if retriable and attempt < max_attempts - 1:
+                delay = _retry_delay_seconds(response, attempt)
+                logger.log(
+                    f"⚠️ arXiv fetch limited for {category} (HTTP {status_code}); "
+                    f"retrying in {delay:.0f}s"
+                )
+                time.sleep(delay)
+                continue
+            logger.log(f"⚠️ arXiv fetch failed for {category}: {_format_request_error(exc)}")
+            return []
+        except requests.RequestException as exc:
+            if attempt < max_attempts - 1:
+                delay = ARXIV_RETRY_DELAYS_SECONDS[min(attempt, len(ARXIV_RETRY_DELAYS_SECONDS) - 1)]
+                logger.log(f"⚠️ arXiv request error for {category}: {exc}; retrying in {delay:.0f}s")
+                time.sleep(delay)
+                continue
+            logger.log(f"⚠️ arXiv fetch failed for {category}: {exc}")
+            return []
+        except Exception as exc:  # network/API failures should not abort all categories
+            logger.log(f"⚠️ arXiv fetch failed for {category}: {exc}")
+            return []
+    else:
         return []
 
     try:
-        root = ET.fromstring(response.text)
+        root = ET.fromstring(response.text if response is not None else "")
     except ET.ParseError as exc:
         logger.log(f"⚠️ arXiv XML parse failed for {category}: {exc}")
         return []
@@ -165,19 +215,139 @@ def fetch_arxiv_category(category: str, logger: PipelineLogger) -> list[dict[str
     return papers
 
 
-def fetch_arxiv_papers(logger: PipelineLogger) -> list[dict[str, Any]]:
-    """Fetch and deduplicate recent papers from arXiv."""
+def _extract_markdown_link_target(line: str) -> str:
+    match = re.search(r"\]\(([^)]+)\)", line)
+    if match:
+        return clean_text(match.group(1))
+    return clean_text(line.split(":", 1)[-1])
+
+
+def _strip_markdown_tags(title_line: str) -> str:
+    return re.sub(r"\s+#\S+(?:\s+#\S+)*\s*$", "", title_line).strip()
+
+
+def parse_arxiv_summary_cache(path: Path) -> list[dict[str, Any]]:
+    """Parse a previously generated arXiv markdown summary for emergency fallback use."""
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    total_match = re.search(r"Total Papers:\s*(\d+)", text)
+    if total_match and int(total_match.group(1)) <= 0:
+        return []
+
+    papers: list[dict[str, Any]] = []
+    current_topic = "cached"
+    current: dict[str, Any] | None = None
+
+    def finish_current() -> None:
+        if current and current.get("title") and current.get("url"):
+            current.setdefault("abstract", current.get("summary_override") or current["title"])
+            current.setdefault("pdf_url", current.get("url", "").replace("/abs/", "/pdf/"))
+            current.setdefault("doi", None)
+            current.setdefault("authors", [])
+            current.setdefault("date", path.stem)
+            current.setdefault("published", current.get("date", path.stem))
+            current.setdefault("updated", current.get("published", current.get("date", path.stem)))
+            current.setdefault("category", current_topic)
+            if not current.get("dedupe_id"):
+                current["dedupe_id"] = current.get("arxiv_id") or current["title"]
+            current["fallback_from"] = path.stem
+            papers.append(current)
+
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if line.startswith("## "):
+            current_topic = line[3:].strip().lower().replace(" ", "_") or "cached"
+            continue
+        if line.startswith("### "):
+            finish_current()
+            title = _strip_markdown_tags(line[4:].strip())
+            current = {
+                "title": title,
+                "abstract": "",
+                "summary_override": "",
+                "category": current_topic,
+                "url": "",
+                "pdf_url": "",
+                "doi": None,
+                "authors": [],
+                "date": path.stem,
+                "published": path.stem,
+                "updated": path.stem,
+            }
+            continue
+        if current is None:
+            continue
+        if line.startswith("- 요약:"):
+            summary = clean_text(line.split(":", 1)[1])
+            current["summary_override"] = summary
+            current["abstract"] = summary
+        elif line.startswith("- 핵심기여:"):
+            category_match = re.search(r"`([^`]+)`", line)
+            if category_match:
+                current["category"] = category_match.group(1)
+        elif line.startswith("- 저자:"):
+            author_text = clean_text(line.split(":", 1)[1])
+            if author_text and "확인" not in author_text:
+                current["authors"] = [
+                    author.strip()
+                    for author in author_text.split(",")
+                    if author.strip() and author.strip().lower() != "et al."
+                ]
+        elif line.startswith("- 링크:"):
+            url = _extract_markdown_link_target(line)
+            current["url"] = url
+            if "/abs/" in url:
+                arxiv_id = arxiv_id_from_url(url)
+                current["arxiv_id"] = arxiv_id
+                current["dedupe_id"] = strip_arxiv_version(arxiv_id)
+        elif line.startswith("- PDF:"):
+            current["pdf_url"] = _extract_markdown_link_target(line)
+        elif line.startswith("- DOI:"):
+            doi = clean_text(line.split(":", 1)[1])
+            current["doi"] = None if not doi or "확인" in doi else doi
+        elif line.startswith("- 게시일:"):
+            date = clean_text(line.split(":", 1)[1])
+            if date and "확인" not in date:
+                current["date"] = date
+                current["published"] = f"{date}T00:00:00Z" if re.fullmatch(r"\d{4}-\d{2}-\d{2}", date) else date
+                current["updated"] = current["published"]
+
+    finish_current()
+    return papers
+
+
+def load_cached_arxiv_papers(today: str, logger: PipelineLogger) -> list[dict[str, Any]]:
+    """Return latest non-empty generated arXiv summary when the live API is rate-limited."""
+    candidates = sorted(ARXIV_DIR.glob("????-??-??.md"), reverse=True)
+    for candidate in candidates:
+        if candidate.stem >= today:
+            continue
+        papers = parse_arxiv_summary_cache(candidate)
+        if papers:
+            logger.log(
+                f"⚠️ Using cached arXiv fallback from {candidate.name} "
+                f"({len(papers)} papers); live arXiv API unavailable"
+            )
+            return papers[:ARXIV_TARGET_TOTAL]
+    logger.log("⚠️ No cached arXiv fallback with papers is available")
+    return []
+
+
+def fetch_arxiv_papers(logger: PipelineLogger, today: str | None = None) -> list[dict[str, Any]]:
+    """Fetch and deduplicate recent papers from arXiv, falling back to cache on total outage."""
     collected: dict[str, dict[str, Any]] = {}
     for idx, category in enumerate(ARXIV_CATEGORIES):
         if idx:
-            time.sleep(1.0)  # be polite to arXiv API
+            time.sleep(ARXIV_REQUEST_DELAY_SECONDS)  # arXiv asks clients to be conservative.
         for paper in fetch_arxiv_category(category, logger):
             # Keep the first/latest hit per arXiv ID without version suffix.
             collected.setdefault(paper["dedupe_id"], paper)
 
     papers = list(collected.values())
     papers.sort(key=lambda item: item.get("published") or item.get("date") or "", reverse=True)
-    return papers[:ARXIV_TARGET_TOTAL]
+    if papers:
+        return papers[:ARXIV_TARGET_TOTAL]
+
+    return load_cached_arxiv_papers(today or dt.date.today().strftime("%Y-%m-%d"), logger)
 
 
 def classify_topic(paper: dict[str, Any]) -> str:
@@ -331,7 +501,7 @@ def summarize_abstract(abstract: str, limit: int = 500) -> str:
 
 
 def generate_arxiv_summary(today: str, logger: PipelineLogger) -> tuple[Path, list[dict[str, Any]]]:
-    papers = fetch_arxiv_papers(logger)
+    papers = fetch_arxiv_papers(logger, today=today)
     classified_papers = classify_papers(papers)
     output_path = ARXIV_DIR / f"{today}.md"
 
@@ -343,6 +513,15 @@ def generate_arxiv_summary(today: str, logger: PipelineLogger) -> tuple[Path, li
         f"오늘 제안/채택한 확장 주제: {', '.join(EXTENSION_TOPICS[:3])}",
         "",
     ]
+
+    fallback_dates = sorted({paper.get("fallback_from") for paper in papers if paper.get("fallback_from")})
+    if fallback_dates:
+        lines.extend(
+            [
+                f"> ⚠️ arXiv API rate limit/server issue로 최신 캐시({', '.join(fallback_dates)})를 대체 사용했습니다. 최신성 검증이 필요합니다.",
+                "",
+            ]
+        )
 
     if not papers:
         lines.extend(
@@ -360,11 +539,15 @@ def generate_arxiv_summary(today: str, logger: PipelineLogger) -> tuple[Path, li
                     authors += ", et al."
                 tags = " ".join(keywords_for_paper(paper, topic))
                 doi = paper.get("doi") or "확인 불가"
+                summary = paper.get("summary_override") or summarize_abstract(paper["abstract"])
+                source_label = f"`{paper['category']}`"
+                if paper.get("fallback_from"):
+                    source_label += f" 캐시({paper['fallback_from']})"
                 lines.extend(
                     [
                         f"### {paper['title']} {tags}",
-                        f"- 요약: {summarize_abstract(paper['abstract'])}",
-                        f"- 핵심기여: `{paper['category']}` 최신 연구로서 {topic.replace('_', ' ')} 관련 방법·평가·응용 가능성을 제시한다.",
+                        f"- 요약: {summary}",
+                        f"- 핵심기여: {source_label} 최신 연구로서 {topic.replace('_', ' ')} 관련 방법·평가·응용 가능성을 제시한다.",
                         f"- 저자: {authors or '확인 불가'}",
                         f"- 링크: [{paper['url']}]({paper['url']})",
                         f"- PDF: [{paper['pdf_url']}]({paper['pdf_url']})",
@@ -547,6 +730,7 @@ def commit_to_github(today: str) -> tuple[str, bool]:
 
         add_paths = [
             "daily_research_pipeline.py",
+            "tests",
             "arxiv_paper",
             "kr_paper",
             "research_reports",
@@ -607,8 +791,16 @@ def main() -> int:
         logger.log(git_result)
 
         arxiv_ok = len(arxiv_papers) > 0
+        using_arxiv_cache = any(paper.get("fallback_from") for paper in arxiv_papers)
         success = arxiv_ok and git_success
-        status = "성공" if success else "부분성공" if arxiv_ok else "실패"
+        if success and using_arxiv_cache:
+            status = "부분성공(캐시대체)"
+        elif success:
+            status = "성공"
+        elif arxiv_ok:
+            status = "부분성공"
+        else:
+            status = "실패"
 
         logger.log("\n📤 Discord Output:")
         logger.log(f"1) 연구 파이프라인 완료: {status}")
@@ -616,7 +808,10 @@ def main() -> int:
         logger.log(f"3) 오늘 확장 주제: {', '.join(EXTENSION_TOPICS[:3])}")
 
         if success:
-            logger.log("\n🎉 Daily research pipeline completed successfully!")
+            if using_arxiv_cache:
+                logger.log("\n⚠️ Daily research pipeline completed with cached arXiv fallback; wiki sync may continue.")
+            else:
+                logger.log("\n🎉 Daily research pipeline completed successfully!")
             return 0
         logger.log("\n⚠️ Daily research pipeline completed with warnings/failures.")
         return 1
