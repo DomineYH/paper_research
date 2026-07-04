@@ -1,0 +1,17 @@
+[2026-07-04T00:01:05Z] 🔬 Daily Research Pipeline Starting...
+[2026-07-04T00:01:05Z] 📅 Date: 2026-07-04
+[2026-07-04T00:01:05Z] 📁 Repository: /home/ubuntu/research
+[2026-07-04T00:01:05Z] 📚 Collecting arXiv papers...
+[2026-07-04T00:01:05Z]   - cs.CL: fetched 8 papers
+[2026-07-04T00:01:10Z]   - cs.AI: fetched 8 papers
+[2026-07-04T00:01:14Z]   - cs.LG: fetched 8 papers
+[2026-07-04T00:01:29Z] ⚠️ arXiv fetch limited for stat.ML (HTTP 429); retrying in 5s
+[2026-07-04T00:02:25Z] ⚠️ arXiv fetch failed for stat.ML: 500 Server Error: Internal Server Error for url: https://export.arxiv.org/api/query?search_query=cat%3Astat.ML&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=<html><head> <meta http-equiv="content-type" content="text/html;charset=utf-8"> <title>500 Server Error</title> </head> 
+[2026-07-04T00:03:29Z] ⚠️ arXiv request error for cs.CR: HTTPSConnectionPool(host='export.arxiv.org', port=443): Read timed out. (read timeout=60); retrying in 5s
+[2026-07-04T00:03:49Z] ⚠️ arXiv fetch failed for cs.CR: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.CR&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-07-04T00:03:49Z] ✅ Generated: arxiv_paper/2026-07-04.md (10 papers)
+[2026-07-04T00:03:49Z] 🇰🇷 Collecting Korean papers...
+[2026-07-04T00:03:49Z] ✅ Generated: kr_paper/2026-07-04.md (3 candidates)
+[2026-07-04T00:03:49Z] 📊 Generating research report...
+[2026-07-04T00:03:49Z] ✅ Generated: research_reports/2026-07-04.md
+[2026-07-04T00:03:49Z] 🚀 Committing to GitHub...
