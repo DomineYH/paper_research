@@ -1,0 +1,17 @@
+[2026-07-08T00:02:08Z] 🔬 Daily Research Pipeline Starting...
+[2026-07-08T00:02:08Z] 📅 Date: 2026-07-08
+[2026-07-08T00:02:08Z] 📁 Repository: /home/ubuntu/research
+[2026-07-08T00:02:08Z] 📚 Collecting arXiv papers...
+[2026-07-08T00:02:08Z]   - cs.CL: fetched 8 papers
+[2026-07-08T00:02:12Z]   - cs.AI: fetched 8 papers
+[2026-07-08T00:02:16Z]   - cs.LG: fetched 8 papers
+[2026-07-08T00:02:51Z] ⚠️ arXiv fetch limited for stat.ML (HTTP 503); retrying in 4s
+[2026-07-08T00:03:26Z] ⚠️ arXiv fetch failed for stat.ML: 500 Server Error: Internal Server Error for url: https://export.arxiv.org/api/query?search_query=cat%3Astat.ML&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=<html><head> <meta http-equiv="content-type" content="text/html;charset=utf-8"> <title>500 Server Error</title> </head> 
+[2026-07-08T00:04:16Z] ⚠️ arXiv fetch limited for cs.CR (HTTP 503); retrying in 4s
+[2026-07-08T00:05:20Z] ⚠️ arXiv fetch failed for cs.CR: HTTPSConnectionPool(host='export.arxiv.org', port=443): Read timed out. (read timeout=60)
+[2026-07-08T00:05:20Z] ✅ Generated: arxiv_paper/2026-07-08.md (10 papers)
+[2026-07-08T00:05:20Z] 🇰🇷 Collecting Korean papers...
+[2026-07-08T00:05:20Z] ✅ Generated: kr_paper/2026-07-08.md (3 candidates)
+[2026-07-08T00:05:20Z] 📊 Generating research report...
+[2026-07-08T00:05:20Z] ✅ Generated: research_reports/2026-07-08.md
+[2026-07-08T00:05:20Z] 🚀 Committing to GitHub...
