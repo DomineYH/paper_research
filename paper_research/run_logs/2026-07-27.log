@@ -1,0 +1,19 @@
+[2026-07-27T00:01:43Z] 🔬 Daily Research Pipeline Starting...
+[2026-07-27T00:01:43Z] 📅 Date: 2026-07-27
+[2026-07-27T00:01:43Z] 📁 Repository: /home/ubuntu/research
+[2026-07-27T00:01:43Z] 📚 Collecting arXiv papers...
+[2026-07-27T00:02:14Z] ⚠️ arXiv fetch limited for cs.CL (HTTP 429); retrying in 5s
+[2026-07-27T00:02:20Z] ⚠️ arXiv fetch failed for cs.CL: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.CL&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-07-27T00:02:24Z]   - cs.AI: fetched 8 papers
+[2026-07-27T00:02:28Z] ⚠️ arXiv fetch limited for cs.LG (HTTP 429); retrying in 5s
+[2026-07-27T00:02:49Z]   - cs.LG: fetched 8 papers
+[2026-07-27T00:02:54Z] ⚠️ arXiv fetch limited for stat.ML (HTTP 429); retrying in 5s
+[2026-07-27T00:03:15Z] ⚠️ arXiv fetch failed for stat.ML: 429 Client Error: Too Many Requests for url: https://export.arxiv.org/api/query?search_query=cat%3Astat.ML&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-07-27T00:03:19Z] ⚠️ arXiv fetch limited for cs.CR (HTTP 429); retrying in 5s
+[2026-07-27T00:03:40Z] ⚠️ arXiv fetch failed for cs.CR: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.CR&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-07-27T00:03:40Z] ✅ Generated: arxiv_paper/2026-07-27.md (10 papers)
+[2026-07-27T00:03:40Z] 🇰🇷 Collecting Korean papers...
+[2026-07-27T00:03:40Z] ✅ Generated: kr_paper/2026-07-27.md (3 candidates)
+[2026-07-27T00:03:40Z] 📊 Generating research report...
+[2026-07-27T00:03:40Z] ✅ Generated: research_reports/2026-07-27.md
+[2026-07-27T00:03:40Z] 🚀 Committing to GitHub...
