@@ -1,0 +1,18 @@
+[2026-08-07T00:02:04Z] 🔬 Daily Research Pipeline Starting...
+[2026-08-07T00:02:04Z] 📅 Date: 2026-08-07
+[2026-08-07T00:02:04Z] 📁 Repository: /home/ubuntu/research
+[2026-08-07T00:02:04Z] 📚 Collecting arXiv papers...
+[2026-08-07T00:02:14Z] ⚠️ arXiv fetch limited for cs.CL (HTTP 429); retrying in 5s
+[2026-08-07T00:03:05Z]   - cs.CL: fetched 8 papers
+[2026-08-07T00:03:10Z]   - cs.AI: fetched 8 papers
+[2026-08-07T00:03:14Z]   - cs.LG: fetched 8 papers
+[2026-08-07T00:03:19Z] ⚠️ arXiv fetch limited for stat.ML (HTTP 429); retrying in 5s
+[2026-08-07T00:03:55Z] ⚠️ arXiv fetch failed for stat.ML: 429 Client Error: Too Many Requests for url: https://export.arxiv.org/api/query?search_query=cat%3Astat.ML&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-08-07T00:04:30Z] ⚠️ arXiv fetch limited for cs.CR (HTTP 429); retrying in 5s
+[2026-08-07T00:05:06Z]   - cs.CR: fetched 8 papers
+[2026-08-07T00:05:06Z] ✅ Generated: arxiv_paper/2026-08-07.md (10 papers)
+[2026-08-07T00:05:06Z] 🇰🇷 Collecting Korean papers...
+[2026-08-07T00:05:06Z] ✅ Generated: kr_paper/2026-08-07.md (3 candidates)
+[2026-08-07T00:05:06Z] 📊 Generating research report...
+[2026-08-07T00:05:06Z] ✅ Generated: research_reports/2026-08-07.md
+[2026-08-07T00:05:06Z] 🚀 Committing to GitHub...
