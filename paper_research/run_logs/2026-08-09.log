@@ -1,0 +1,16 @@
+[2026-08-09T00:01:11Z] 🔬 Daily Research Pipeline Starting...
+[2026-08-09T00:01:11Z] 📅 Date: 2026-08-09
+[2026-08-09T00:01:11Z] 📁 Repository: /home/ubuntu/research
+[2026-08-09T00:01:11Z] 📚 Collecting arXiv papers...
+[2026-08-09T00:02:11Z] ⚠️ arXiv request error for cs.CL: HTTPSConnectionPool(host='export.arxiv.org', port=443): Read timed out. (read timeout=60); retrying in 5s
+[2026-08-09T00:03:16Z] ⚠️ arXiv fetch failed for cs.CL: HTTPSConnectionPool(host='export.arxiv.org', port=443): Read timed out. (read timeout=60)
+[2026-08-09T00:03:21Z]   - cs.AI: fetched 8 papers
+[2026-08-09T00:03:25Z]   - cs.LG: fetched 8 papers
+[2026-08-09T00:03:30Z]   - stat.ML: fetched 8 papers
+[2026-08-09T00:04:20Z]   - cs.CR: fetched 8 papers
+[2026-08-09T00:04:20Z] ✅ Generated: arxiv_paper/2026-08-09.md (10 papers)
+[2026-08-09T00:04:20Z] 🇰🇷 Collecting Korean papers...
+[2026-08-09T00:04:20Z] ✅ Generated: kr_paper/2026-08-09.md (3 candidates)
+[2026-08-09T00:04:20Z] 📊 Generating research report...
+[2026-08-09T00:04:20Z] ✅ Generated: research_reports/2026-08-09.md
+[2026-08-09T00:04:20Z] 🚀 Committing to GitHub...
