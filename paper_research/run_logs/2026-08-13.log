@@ -1,0 +1,16 @@
+[2026-08-13T00:01:35Z] 🔬 Daily Research Pipeline Starting...
+[2026-08-13T00:01:35Z] 📅 Date: 2026-08-13
+[2026-08-13T00:01:35Z] 📁 Repository: /home/ubuntu/research
+[2026-08-13T00:01:35Z] 📚 Collecting arXiv papers...
+[2026-08-13T00:01:50Z]   - cs.CL: fetched 8 papers
+[2026-08-13T00:01:55Z]   - cs.AI: fetched 8 papers
+[2026-08-13T00:01:59Z]   - cs.LG: fetched 8 papers
+[2026-08-13T00:02:03Z]   - stat.ML: fetched 8 papers
+[2026-08-13T00:02:48Z] ⚠️ arXiv fetch limited for cs.CR (HTTP 429); retrying in 5s
+[2026-08-13T00:03:40Z] ⚠️ arXiv fetch failed for cs.CR: 503 Server Error: Service Unavailable for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.CR&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <title>503</title> </head> <body> 503 </body> </html>
+[2026-08-13T00:03:40Z] ✅ Generated: arxiv_paper/2026-08-13.md (10 papers)
+[2026-08-13T00:03:40Z] 🇰🇷 Collecting Korean papers...
+[2026-08-13T00:03:40Z] ✅ Generated: kr_paper/2026-08-13.md (3 candidates)
+[2026-08-13T00:03:40Z] 📊 Generating research report...
+[2026-08-13T00:03:40Z] ✅ Generated: research_reports/2026-08-13.md
+[2026-08-13T00:03:40Z] 🚀 Committing to GitHub...
