@@ -1,0 +1,19 @@
+[2026-09-05T00:01:54Z] 🔬 Daily Research Pipeline Starting...
+[2026-09-05T00:01:54Z] 📅 Date: 2026-09-05
+[2026-09-05T00:01:54Z] 📁 Repository: /home/ubuntu/research
+[2026-09-05T00:01:54Z] 📚 Collecting arXiv papers...
+[2026-09-05T00:02:05Z] ⚠️ arXiv fetch limited for cs.CL (HTTP 429); retrying in 5s
+[2026-09-05T00:02:37Z] ⚠️ arXiv fetch failed for cs.CL: 429 Client Error: Too Many Requests for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.CL&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-09-05T00:02:41Z]   - cs.AI: fetched 8 papers
+[2026-09-05T00:02:45Z] ⚠️ arXiv fetch limited for cs.LG (HTTP 429); retrying in 5s
+[2026-09-05T00:02:50Z] ⚠️ arXiv fetch failed for cs.LG: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.LG&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-09-05T00:03:26Z] ⚠️ arXiv fetch limited for stat.ML (HTTP 429); retrying in 5s
+[2026-09-05T00:03:32Z] ⚠️ arXiv fetch failed for stat.ML: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Astat.ML&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-09-05T00:03:36Z] ⚠️ arXiv fetch limited for cs.CR (HTTP 429); retrying in 5s
+[2026-09-05T00:04:12Z]   - cs.CR: fetched 8 papers
+[2026-09-05T00:04:12Z] ✅ Generated: arxiv_paper/2026-09-05.md (10 papers)
+[2026-09-05T00:04:12Z] 🇰🇷 Collecting Korean papers...
+[2026-09-05T00:04:12Z] ✅ Generated: kr_paper/2026-09-05.md (3 candidates)
+[2026-09-05T00:04:12Z] 📊 Generating research report...
+[2026-09-05T00:04:12Z] ✅ Generated: research_reports/2026-09-05.md
+[2026-09-05T00:04:12Z] 🚀 Committing to GitHub...
