@@ -1,0 +1,17 @@
+[2026-11-10T00:01:15Z] 🔬 Daily Research Pipeline Starting...
+[2026-11-10T00:01:15Z] 📅 Date: 2026-11-10
+[2026-11-10T00:01:15Z] 📁 Repository: /home/ubuntu/research
+[2026-11-10T00:01:15Z] 📚 Collecting arXiv papers...
+[2026-11-10T00:01:37Z] ⚠️ arXiv fetch limited for cs.CL (HTTP 429); retrying in 5s
+[2026-11-10T00:02:03Z]   - cs.CL: fetched 8 papers
+[2026-11-10T00:02:07Z]   - cs.AI: fetched 8 papers
+[2026-11-10T00:02:11Z] ⚠️ arXiv fetch limited for cs.LG (HTTP 429); retrying in 5s
+[2026-11-10T00:02:45Z]   - cs.LG: fetched 8 papers
+[2026-11-10T00:03:05Z]   - stat.ML: fetched 8 papers
+[2026-11-10T00:03:09Z]   - cs.CR: fetched 8 papers
+[2026-11-10T00:03:09Z] ✅ Generated: arxiv_paper/2026-11-10.md (10 papers)
+[2026-11-10T00:03:09Z] 🇰🇷 Collecting Korean papers...
+[2026-11-10T00:03:09Z] ✅ Generated: kr_paper/2026-11-10.md (3 candidates)
+[2026-11-10T00:03:09Z] 📊 Generating research report...
+[2026-11-10T00:03:09Z] ✅ Generated: research_reports/2026-11-10.md
+[2026-11-10T00:03:09Z] 🚀 Committing to GitHub...
