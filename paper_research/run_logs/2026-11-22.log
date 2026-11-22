@@ -1,0 +1,17 @@
+[2026-11-22T00:01:10Z] 🔬 Daily Research Pipeline Starting...
+[2026-11-22T00:01:10Z] 📅 Date: 2026-11-22
+[2026-11-22T00:01:10Z] 📁 Repository: /home/ubuntu/research
+[2026-11-22T00:01:10Z] 📚 Collecting arXiv papers...
+[2026-11-22T00:01:20Z] ⚠️ arXiv fetch limited for cs.CL (HTTP 429); retrying in 5s
+[2026-11-22T00:01:51Z] ⚠️ arXiv fetch failed for cs.CL: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.CL&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-11-22T00:01:55Z]   - cs.AI: fetched 8 papers
+[2026-11-22T00:01:59Z] ⚠️ arXiv fetch limited for cs.LG (HTTP 429); retrying in 5s
+[2026-11-22T00:02:05Z] ⚠️ arXiv fetch failed for cs.LG: 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.LG&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending; body=Rate exceeded.
+[2026-11-22T00:02:55Z]   - stat.ML: fetched 8 papers
+[2026-11-22T00:02:59Z]   - cs.CR: fetched 8 papers
+[2026-11-22T00:02:59Z] ✅ Generated: arxiv_paper/2026-11-22.md (10 papers)
+[2026-11-22T00:02:59Z] 🇰🇷 Collecting Korean papers...
+[2026-11-22T00:02:59Z] ✅ Generated: kr_paper/2026-11-22.md (3 candidates)
+[2026-11-22T00:02:59Z] 📊 Generating research report...
+[2026-11-22T00:02:59Z] ✅ Generated: research_reports/2026-11-22.md
+[2026-11-22T00:02:59Z] 🚀 Committing to GitHub...
